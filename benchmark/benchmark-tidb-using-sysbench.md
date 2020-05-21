@@ -6,7 +6,7 @@ aliases: ['/docs/dev/benchmark/how-to-run-sysbench/']
 
 # How to Test TiDB Using Sysbench
 
-In this test, Sysbench 1.0.14 and TiDB 3.0 Beta are used. It is recommended to use Sysbench 1.0 or later, which can be [downloaded here](https://github.com/akopytov/sysbench/releases/tag/1.0.14).
+In this test, Sysbench 1.0.14 and TiDB 4.0 are used. It is recommended to use Sysbench 1.0 or later, which can be [downloaded here](https://github.com/akopytov/sysbench/releases/tag/1.0.14).
 
 ## Test environment
 
@@ -60,7 +60,7 @@ enabled = true
 
 Higher log level also means better performance for TiKV.
 
-As TiKV is deployed in clusters, the Raft algorithm can guarantee that data is written into most of the nodes. Therefore, except the scenarios where data safety is extremely important, `sync-log` can be disabled in raftstore.
+As TiKV is deployed in clusters, the Raft algorithm can guarantee that data is written into most of the nodes. In the test environment, turning off the `sync-log` option in raftstore can effectively improve write performance. In the actual production environment, this value is true by default, and it is a hidden parameter and should not be modified.
 
 There are 2 Column Families (Default CF and Write CF) on TiKV cluster which are mainly used to store different types of data. For the Sysbench test, the Column Family that is used to import data has a constant proportion among TiDB clusters:
 
@@ -266,7 +266,7 @@ Take HAproxy as an example. The parameter `nbproc` can increase the number of pr
 
 Although the overall CPU utilization rate is low for TiKV, the CPU utilization rate of some modules in the cluster might be high.
 
-The maximum concurrency limits for other modules on TiKV, such as storage readpool, coprocessor, and gRPC, can be adjusted through the TiKV configuration file.
+The maximum concurrency limits for other modules on TiKV, such as storage readpool, coprocessor（for TiDB 4.0，readpool.unified replaced storage readpool and coprocessor）, and gRPC, can be adjusted through the TiKV configuration file.
 
 The actual CPU usage can be observed through Grafana's TiKV Thread CPU monitor panel. If there is a bottleneck on the modules, it can be adjusted by increasing the concurrency of the modules.
 
